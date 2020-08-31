@@ -9,7 +9,7 @@
 enum {
     BUF_SIZE = 256,
     ARG_SIZE = 16,
-	CMD_SIZE = 8,
+    CMD_SIZE = 8,
 };
 
 int left[2], right[2];
@@ -18,8 +18,8 @@ typedef struct Command Command;
 
 struct Command {
     char cmd[CMD_SIZE * ARG_SIZE];
-	int bg, output, indices[ARG_SIZE];
-	char *infile, *outfile;
+    int bg, output, indices[ARG_SIZE];
+    char *infile, *outfile;
 };
 
 int splitinput(Command *, char *);
@@ -29,45 +29,45 @@ int run(char **, Command, int, int);
 
 int main(){
     char line[BUF_SIZE], *args[ARG_SIZE];
-	int i, j, k, numcommands, argc, pipecount;
-	Command command, commands[CMD_SIZE];
-
+    int i, j, k, numcommands, argc, pipecount;
+    Command command, commands[CMD_SIZE];
+    
     while(1){
         printf(">>> ");
-
-		if (fgets(line, BUF_SIZE, stdin) == NULL){
-			printf("\n");
-			break;
-		}
-
-		if (line[0] == '\n'){
-			continue;
-		}
-
-		if (line[strlen(line) - 1] == '\n'){
-			line[strlen(line) - 1] = '\0';
-		}
-
+        
+        if (fgets(line, BUF_SIZE, stdin) == NULL){
+            printf("\n");
+            break;
+        }
+        
+        if (line[0] == '\n'){
+            continue;
+        }
+        
+        if (line[strlen(line) - 1] == '\n'){
+            line[strlen(line) - 1] = '\0';
+        }
+        
         numcommands = splitinput(commands, line);
-
+        
         for (i = 0; i < numcommands; i++){
             argc = splitcmd(&commands[i], args);
             pipecount = cleanupargs(&commands[i], args, argc);
             for (j = 0; j <= pipecount; j++){
                 if (strcmp(args[commands[i].indices[j]], "exit") == 0){
-					return(0);
-				}
-				if (strcmp(args[0], "cd") == 0){
-					if (args[2]){
-						fprintf(stderr, "Too Many Arguments.\n");
-						continue;
-					}
-					if (!args[1] || strcmp(args[1], "~") == 0){
-						chdir(getenv("HOME"));
-					} else {
-						chdir(args[1]);
-					}
-				} else {
+                    return(0);
+                }
+                if (strcmp(args[0], "cd") == 0){
+                    if (args[2]){
+                        fprintf(stderr, "Too Many Arguments.\n");
+                        continue;
+                    }
+                    if (!args[1] || strcmp(args[1], "~") == 0){
+                        chdir(getenv("HOME"));
+                    } else {
+                        chdir(args[1]);
+                    }
+                } else {
                     k = run(args, commands[i], pipecount, j);
                     if (k == 3){
                         continue;
@@ -84,8 +84,8 @@ int main(){
         }
 
         for (i = 0; i < argc; i++){
-			args[i] = NULL;
-		}
+            args[i] = NULL;
+        }
     }
     return(0);
 }
