@@ -236,8 +236,8 @@ int run(char** args, Command command, int pipecount, int index){
             close(left[1]);
         }
         execvp(args[command.indices[index]], &args[command.indices[index]]);
-		perror("execvp");
-	    return(2);
+        perror("execvp");
+        return(2);
     } else {
         if (index != 0){
             close(left[0]);
